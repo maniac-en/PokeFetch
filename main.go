@@ -1,25 +1,48 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
 )
 
+const (
+	PROMPT string = "PokeFetch > "
+)
+
 func main() {
-	fmt.Println("Hello, World!")
+	for {
+		fmt.Print(PROMPT)
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			inputLine := scanner.Text()
+			cleanedInputLine := cleanInput(inputLine)
+			if len(cleanedInputLine) == 0 {
+				fmt.Fprintln(os.Stderr, "Error: bad input")
+				break
+			}
+			cmdToPrint := cleanedInputLine[0]
+			fmt.Printf("Your command was: %s\n", cmdToPrint)
+			break
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Fprintln(os.Stderr, "reading standard input: ", err)
+		}
+	}
 }
 
 func cleanInput(text string) []string {
 	output := []string{}
-	splits := strings.Split(text, " ")
-	for _, split := range splits {
+	splits := strings.SplitSeq(text, " ")
+	for split := range splits {
+		lowercaseSplit := strings.ToLower(split)
+		trimmedSplit := strings.TrimSpace(lowercaseSplit)
 		// ignore empty splits
-		if split == "" {
+		if trimmedSplit == "" {
 			continue
 		}
-		lowercase_split := strings.ToLower(split)
-		trimmed_split := strings.Trim(lowercase_split, " ")
-		output = append(output, trimmed_split)
+		output = append(output, trimmedSplit)
 	}
 	return output
 }
