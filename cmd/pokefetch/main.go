@@ -1,7 +1,15 @@
 package main
 
-import "github.com/maniac-en/pokefetch/internal/repl"
+import (
+	"time"
+
+	"github.com/maniac-en/pokefetch/internal/client"
+)
 
 func main() {
-	repl.Start()
+	pokeClient := client.NewClient(5*time.Second, 5*time.Minute)
+	cfg := &config{
+		client: pokeClient,
+	}
+	ReplStart(cfg)
 }
