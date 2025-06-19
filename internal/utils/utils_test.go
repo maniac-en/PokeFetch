@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"reflect"
@@ -70,7 +70,7 @@ func TestCleanInput(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.desc, func(t *testing.T) { // Use t.Run for better test output
-			actual := cleanInput(c.input)
+			actual := CleanInput(c.input)
 
 			if !reflect.DeepEqual(actual, c.expected) {
 				t.Errorf("For input '%s': Expected %v, got %v", c.input, c.expected, actual)
