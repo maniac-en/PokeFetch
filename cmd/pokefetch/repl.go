@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/maniac-en/pokefetch/internal/client"
 	"github.com/maniac-en/pokefetch/internal/utils"
@@ -33,10 +34,15 @@ func ReplStart(cfg *config) {
 			continue
 		}
 		inputCmd := cleanedInputLine[0]
+		var params *string
+		if len(cleanedInputLine) > 1 {
+			restOfTheInput := strings.Join(cleanedInputLine[1:], " ")
+			params = &restOfTheInput
+		}
 		if handler, ok := getCommands()[inputCmd]; !ok {
 			fmt.Println("Unknown command:", inputCmd)
 		} else {
-			err := handler.callback(cfg)
+			err := handler.callback(cfg, params)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, "Error executing command:", err)
 			}

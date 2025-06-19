@@ -19,10 +19,17 @@ type Cache struct {
 	ttl     time.Duration
 }
 
+func (c *Cache) GetTTL() int {
+	return int(c.ttl.Minutes())
+}
+
 func (c *Cache) Add(key string, val []byte) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	c.entries[key] = cacheEntry{time.Now(), val}
+	c.entries[key] = cacheEntry{
+		createdAt: time.Now(),
+		val:       val,
+	}
 }
 
 func (c *Cache) Get(key string) ([]byte, bool) {
@@ -36,9 +43,10 @@ func (c *Cache) removeExpired() {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	for key, val := range c.entries {
-		if val.createdAt.Compare(time.Now()) >= 0 {
-			fmt.Println("Removing the cached entry:", key)
+		if val.createdAt.Compare(time.Now().Add(-c.ttl)) >= 0 {
 			delete(c.entries, key)
+			// @@@(todo): this gets printed but stays on REPL
+			fmt.Print("Removing the cached entry:", key)
 		}
 	}
 }
