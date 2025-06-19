@@ -41,7 +41,7 @@ func init() {
 		},
 		"exit": {
 			name:        "exit",
-			description: "Exit the Pokedex",
+			description: "Exit the PokeFetch",
 			callback:    commandExit,
 			config: struct {
 				next     string
@@ -70,13 +70,13 @@ func init() {
 }
 
 func commandExit() error {
-	fmt.Print("Closing the Pokedex... Goodbye!")
+	fmt.Print("Closing the PokeFetch... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
 func commandHelp() error {
-	fmt.Println("Welcome to the Pokedex!")
+	fmt.Println("Welcome to the PokeFetch!")
 	fmt.Println("Usage:")
 	fmt.Println()
 	for _, cmd := range commands {
