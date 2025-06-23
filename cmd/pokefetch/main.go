@@ -9,7 +9,8 @@ import (
 func main() {
 	pokeClient := client.NewClient(5*time.Second, 1*time.Minute)
 	cfg := &config{
-		client: pokeClient,
+		client:  pokeClient,
+		pokedex: make(map[string]client.Pokemon),
 	}
 	ReplStart(cfg)
 }

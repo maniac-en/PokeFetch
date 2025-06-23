@@ -3,7 +3,6 @@
 package cache
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -45,8 +44,6 @@ func (c *Cache) removeExpired() {
 	for key, val := range c.entries {
 		if val.createdAt.Compare(time.Now().Add(-c.ttl)) >= 0 {
 			delete(c.entries, key)
-			// @@@(todo): this gets printed but stays on REPL
-			fmt.Print("Removing the cached entry:", key)
 		}
 	}
 }

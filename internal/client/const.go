@@ -5,4 +5,5 @@ const (
 	baseURL         string = "https://pokeapi.co/api"
 	apiVersion      string = "/v2"
 	mapAreaEndpoint string = baseURL + apiVersion + "/location-area"
+	pokemonEndpoint string = baseURL + apiVersion + "/pokemon"
 )

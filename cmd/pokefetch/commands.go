@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+
+	rand "math/rand/v2"
 )
 
 type cliCommand struct {
@@ -38,6 +40,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "Explore a map, like \"explore <map-area-name>\"",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Catch a pookemon",
+			callback:    commandCatch,
 		},
 	}
 }
@@ -106,5 +113,29 @@ func commandExplore(cfg *config, param *string) error {
 		fmt.Println("-", pokemonEncounter.Pokemon.Name)
 	}
 
+	return nil
+}
+
+func commandCatch(cfg *config, param *string) error {
+	if param == nil {
+		return fmt.Errorf("can't catch a pokemon with no name, please provide one")
+	}
+	if pokemon, ok := cfg.pokedex[*param]; ok {
+		fmt.Println("You already caught", pokemon.Name)
+		return nil
+	}
+	pokemon, err := cfg.client.GetPokemon(param)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Throwing a Pokeball at %s...\n", pokemon.Name)
+	chance := float64(rand.IntN(pokemon.BaseExperience))
+	// fail if chance less than 40%
+	if (chance / float64(pokemon.BaseExperience)) < 0.4 {
+		fmt.Println(pokemon.Name, "escaped!")
+	} else {
+		fmt.Println(pokemon.Name, "was caught!")
+		cfg.pokedex[pokemon.Name] = pokemon
+	}
 	return nil
 }

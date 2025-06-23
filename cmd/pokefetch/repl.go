@@ -14,6 +14,7 @@ type config struct {
 	client         client.Client
 	nextMapAreaURL *string
 	prevMapAreaURL *string
+	pokedex        map[string]client.Pokemon
 }
 
 const (
