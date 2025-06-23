@@ -46,6 +46,16 @@ func getCommands() map[string]cliCommand {
 			description: "Catch a pookemon",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a caught pokemon",
+			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "List out all the caught pokemons",
+			callback:    commandPokedex,
+		},
 	}
 }
 
@@ -135,7 +145,41 @@ func commandCatch(cfg *config, param *string) error {
 		fmt.Println(pokemon.Name, "escaped!")
 	} else {
 		fmt.Println(pokemon.Name, "was caught!")
+		fmt.Println("You may now inspect it with the inspect command")
 		cfg.pokedex[pokemon.Name] = pokemon
+	}
+	return nil
+}
+
+func commandInspect(cfg *config, param *string) error {
+	if param == nil {
+		return fmt.Errorf("can't inspect a pokemon with no name, please provide one")
+	}
+	if pokemon, ok := cfg.pokedex[*param]; ok {
+		fmt.Println("Name:", pokemon.Name)
+		fmt.Println("Height:", pokemon.Height)
+		fmt.Println("Weight:", pokemon.Weight)
+		fmt.Println("Stats:")
+		for _, stat := range pokemon.Stats {
+			fmt.Printf("  - %s: %d\n", stat.Stat.Name, stat.BaseStat)
+		}
+		fmt.Println("Types:")
+		for _, t := range pokemon.Types {
+			fmt.Printf("  - %s\n", t.Type.Name)
+		}
+		return nil
+	} else {
+		return fmt.Errorf("you have not caught that pokemon")
+	}
+}
+
+func commandPokedex(cfg *config, _ *string) error {
+	if len(cfg.pokedex) == 0 {
+		return fmt.Errorf("your pokedex is empty, go catch some pokemons with catch command")
+	}
+	fmt.Println("Your Pokedex:")
+	for k := range cfg.pokedex {
+		fmt.Println("  -", k)
 	}
 	return nil
 }
