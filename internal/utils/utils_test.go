@@ -29,7 +29,7 @@ func TestCleanInput(t *testing.T) {
 		{
 			desc:     "single word with varied casing (should be lowercased)",
 			input:    " hEllOwoRld ",
-			expected: []string{"helloworld"}, // Input is " hEllOwoRld ", not " hEllOwoRld world "
+			expected: []string{"helloworld"},
 		},
 		{
 			desc:     "mixed casing words (all should be lowercased)",
@@ -69,7 +69,7 @@ func TestCleanInput(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		t.Run(c.desc, func(t *testing.T) { // Use t.Run for better test output
+		t.Run(c.desc, func(t *testing.T) {
 			actual := CleanInput(c.input)
 
 			if !reflect.DeepEqual(actual, c.expected) {
