@@ -62,7 +62,6 @@ func GetResourceFromPokeAPI[T any](client *Client, URL *string) (T, error) {
 
 	var result T
 	if val, ok := client.cache.Get(*URL); ok {
-		fmt.Println("Providing cached result from past", client.cache.GetTTL(), "minutes")
 		if err := json.Unmarshal(val, &result); err != nil {
 			return zero, fmt.Errorf("failed to unmarshal cached data: %w", err)
 		}
